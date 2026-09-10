@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int         @id @default(autoincrement())
+  avatar           String?
+  email            String      @unique
+  username         String      @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  nickname         String?
+  bio              String?
+  chesscomUsername String?
+  lichessUsername  String?
+  role             String      @default("player")
+  comments         Comment[]
+  resetCodes       ResetCode[]
+  isActive         Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  posts            Post[]
+  feedPosts        FeedPost[]
+  feedReplies      FeedReply[]
+}
+
+model ResetCode {
+  id        Int      @id @default(autoincrement())
+  code      String
+  email     String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isUsed    Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  sid    String   @id @unique
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+
+  @@map("session")
+}
+
+model Post {
+  id         Int         @id @default(autoincrement())
+  slug       String      @unique
+  title      String
+  category   String
+  excerpt    String
+  content    String
+  coverImage String?
+  claps      Int         @default(0)
+  views      Int         @default(0)
+  comments   Comment[]
+  visits     PostVisit[]
+  userId     Int         @default(1)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive   Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model FeedPost {
+  id          Int             @id @default(autoincrement())
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug        String          @unique
+  body        String
+  isActive    Boolean         @default(true)
+  views       Int             @default(0)
+  attachments FeedPostImage[]
+  replies     FeedReply[]
+  visits      FeedPostVisit[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model PostVisit {
+  id             Int      @id @default(autoincrement())
+  postId         Int
+  post           Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  fingerprint    String
+  countedThrough DateTime
+  createdAt      DateTime @default(now())
+
+  @@unique([postId, fingerprint])
+}
+
+model FeedPostVisit {
+  id             Int      @id @default(autoincrement())
+  feedPostId     Int
+  feedPost       FeedPost @relation(fields: [feedPostId], references: [id], onDelete: Cascade)
+  fingerprint    String
+  countedThrough DateTime
+  createdAt      DateTime @default(now())
+
+  @@unique([feedPostId, fingerprint])
+}
+
+model FeedReply {
+  id         Int         @id @default(autoincrement())
+  content    String
+  feedPostId Int
+  feedPost   FeedPost    @relation(fields: [feedPostId], references: [id], onDelete: Cascade)
+  userId     Int
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId   Int?
+  parent     FeedReply?  @relation("FeedReplyReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    FeedReply[] @relation("FeedReplyReplies")
+  isActive   Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model FeedPostImage {
+  id         Int      @id @default(autoincrement())
+  feedPostId Int
+  feedPost   FeedPost @relation(fields: [feedPostId], references: [id], onDelete: Cascade)
+  filename   String
+  position   Int
+  createdAt  DateTime @default(now())
+
+  @@unique([feedPostId, position])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  postId    Int
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId  Int?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
