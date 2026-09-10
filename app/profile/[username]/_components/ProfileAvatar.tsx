@@ -15,8 +15,9 @@ interface ProfileAvatarProps {
  * Interaction rules (deliberate, to keep members in control of their photo):
  * - The photo is **not** draggable and its context menu is suppressed; only a
  *   plain left click opens the enlarged view.
- * - The enlarged view is inert too — no context menu, no drag.
- * - Closing is explicit (✕ button, backdrop click or Escape).
+ * - The enlarged view is just the avatar itself — no chrome, no close button;
+ *   it is inert too (no context menu, no drag).
+ * - Closing is explicit (backdrop click or Escape).
  *
  * Right-click/drag suppression is a UX deterrent, not a security boundary:
  * the underlying file is still a public URL (as it must be to render at all).
@@ -27,21 +28,21 @@ export default function ProfileAvatar({
   avatar,
 }: ProfileAvatarProps) {
   const [open, setOpen] = useState(false);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const src = avatar ? `/uploads/avatars/${avatar}` : null;
 
   const close = useCallback(() => setOpen(false), []);
 
-  // Escape closes the lightbox; focus moves to the close button while it is
-  // open so keyboard users are never stranded behind the overlay.
+  // Escape closes the lightbox; focus moves onto the dialog while it is open so
+  // keyboard users are never stranded behind the overlay.
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
     window.addEventListener("keydown", onKeyDown);
-    closeButtonRef.current?.focus();
+    dialogRef.current?.focus();
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, close]);
 
@@ -92,6 +93,8 @@ export default function ProfileAvatar({
 
       {open && src && (
         <div
+          ref={dialogRef}
+          tabIndex={-1}
           role="dialog"
           aria-modal="true"
           aria-label={`${username}'s profile picture`}
@@ -100,42 +103,23 @@ export default function ProfileAvatar({
             if (e.target === e.currentTarget) close();
           }}
           onContextMenu={blockContextMenu}
-          className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer focus:outline-none"
         >
           <div
-            className="relative bg-chess-surface p-4 rounded-3xl space-y-3 max-w-lg w-full flex flex-col items-center cursor-default select-none"
+            className="w-56 h-56 md:w-72 md:h-72 relative rounded-full overflow-hidden bg-chess-bg/40 ring-4 ring-chess-surface/40 shadow-2xl cursor-default"
             onContextMenu={blockContextMenu}
           >
-            <div className="w-full flex items-center justify-between border-b border-chess-bg pb-2 px-1">
-              <span className="text-xs font-black text-chess-text">
-                @{username}
-              </span>
-              <button
-                ref={closeButtonRef}
-                type="button"
-                onClick={close}
-                aria-label="Close profile picture"
-                className="w-7 h-7 rounded-full font-black text-xs flex items-center justify-center bg-chess-bg hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div
-              className="w-full h-[60vh] max-h-[450px] relative rounded-2xl overflow-hidden bg-chess-bg/40"
+            <Image
+              src={src}
+              alt={username}
+              fill
+              sizes="288px"
+              unoptimized
+              draggable={false}
+              onDragStart={blockDrag}
               onContextMenu={blockContextMenu}
-            >
-              <Image
-                src={src}
-                alt={username}
-                fill
-                sizes="(max-width: 768px) 100vw, 500px"
-                draggable={false}
-                onDragStart={blockDrag}
-                onContextMenu={blockContextMenu}
-                className="object-contain select-none pointer-events-none"
-              />
-            </div>
+              className="object-cover select-none pointer-events-none"
+            />
           </div>
         </div>
       )}
