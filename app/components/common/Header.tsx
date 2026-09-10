@@ -147,6 +147,9 @@ export default function Header() {
             <span className="font-black text-lg sm:text-xl text-chess-text tracking-tight lowercase transition-colors duration-300 group-hover:text-chess-primary">
               {getSiteName()}
             </span>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gradient-to-r from-violet-500 to-fuzzy-pink text-white shadow-sm shadow-violet-500/30 self-center">
+              beta
+            </span>
           </Link>
 
           {/* Right Area: Only Sign in / Profile and the 3-line Menu Button */}

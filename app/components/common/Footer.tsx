@@ -40,6 +40,7 @@ const supportEmail = getSupportEmail();
 
 export default function Footer() {
   const pathname = usePathname();
+  const currentYear = new Date().getFullYear();
 
   if (pathname === "/auth") return null;
 
@@ -90,36 +91,54 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Copyright */}
-        <div className="flex items-center gap-1.5 text-chess-text/40 shrink-0 text-[11px]">
-          <span>© 2026</span>
+        {/* Copyright & grepground Branding */}
+        <div className="flex flex-wrap items-center justify-center gap-2 text-chess-text/50 shrink-0 text-[11px]">
+          <span>© {currentYear}</span>
           <span>•</span>
-          <span>read, solve & improve 🧩</span>
+          <span className="flex items-center gap-1">
+            a
+            <a
+              href="https://grepground.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-chess-text hover:text-chess-primary transition-colors bg-chess-bg px-2 py-0.5 rounded-md border border-chess-text/10"
+            >
+              grepground
+            </a>
+            project
+          </span>
         </div>
       </div>
 
-      {/* Legal Links */}
-      <div className="mt-2 flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-[11px] font-black text-chess-text/40">
-        <Link
-          href="/privacy"
-          className="hover:text-chess-primary transition-colors"
-        >
-          Privacy Policy
-        </Link>
-        <span className="text-chess-text/20">•</span>
-        <Link
-          href="/terms"
-          className="hover:text-chess-primary transition-colors"
-        >
-          Terms of Use
-        </Link>
-        <span className="text-chess-text/20">•</span>
-        <Link
-          href="/cookies"
-          className="hover:text-chess-primary transition-colors"
-        >
-          Cookie Policy
-        </Link>
+      {/* Legal Links & Tagline */}
+      <div className="mt-3 flex flex-col sm:flex-row justify-between items-center gap-y-2 px-2 text-[11px] font-medium text-chess-text/40">
+        <div className="flex items-center gap-1.5">
+          <span>read, solve & improve</span>
+          <span>🧩</span>
+        </div>
+
+        <div className="flex items-center gap-x-3 font-bold">
+          <Link
+            href="/privacy"
+            className="hover:text-chess-primary transition-colors"
+          >
+            Privacy Policy
+          </Link>
+          <span className="text-chess-text/20">•</span>
+          <Link
+            href="/terms"
+            className="hover:text-chess-primary transition-colors"
+          >
+            Terms of Use
+          </Link>
+          <span className="text-chess-text/20">•</span>
+          <Link
+            href="/cookies"
+            className="hover:text-chess-primary transition-colors"
+          >
+            Cookie Policy
+          </Link>
+        </div>
       </div>
     </footer>
   );
