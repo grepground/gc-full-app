@@ -34,6 +34,7 @@ yarn-error.log*
 # Real secrets must never be committed. The template is explicitly allowed back
 # in so contributors can see which variables exist without any real values.
 .env*
+!.env.example
 
 # vercel
 .vercel

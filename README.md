@@ -1,6 +1,6 @@
-# gc-frontend
+# gc-monolith
 
-Project: gc-frontend
+Project: gc-monolith
 Copyright (C) 2026 grepground
 
 **ATTRIBUTION NOTICE:**
