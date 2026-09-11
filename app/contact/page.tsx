@@ -1,34 +1,8 @@
 import React from "react";
-import { getSocialHandle, getSupportEmail } from "../services/siteConfig";
-import {
-  InstagramIcon,
-  MailIcon,
-  PinterestIcon,
-  ThreadsIcon,
-  TiktokIcon,
-  XIcon,
-  YoutubeIcon,
-} from "../components/common/SocialIcons";
+import { getSupportEmail } from "../services/siteConfig";
+import { MailIcon, socialLinks } from "../components/common/SocialIcons";
 
-const handle = getSocialHandle();
 const supportEmail = getSupportEmail();
-
-const socialLinks = [
-  { name: "YouTube", url: `https://youtube.com/@${handle}`, icon: YoutubeIcon },
-  {
-    name: "Instagram",
-    url: `https://instagram.com/${handle}`,
-    icon: InstagramIcon,
-  },
-  { name: "Threads", url: `https://threads.net/@${handle}`, icon: ThreadsIcon },
-  { name: "TikTok", url: `https://tiktok.com/@${handle}`, icon: TiktokIcon },
-  { name: "X (Twitter)", url: `https://x.com/${handle}`, icon: XIcon },
-  {
-    name: "Pinterest",
-    url: `https://pinterest.com/${handle}`,
-    icon: PinterestIcon,
-  },
-];
 
 export default function ContactPage() {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { getPageTitle, getSiteName } from "../services/siteConfig";
+import { socialLinks } from "../components/common/SocialIcons";
 
 export const metadata = {
   title: getPageTitle("About"),
@@ -75,12 +75,42 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Social Media */}
+      <section className="bg-chess-surface p-6 sm:p-8 rounded-3xl space-y-5">
+        <div className="space-y-1.5 text-center">
+          <h2 className="text-xl font-black">Follow Along</h2>
+          <p className="text-xs font-bold text-chess-text/60 max-w-lg mx-auto leading-relaxed">
+            Daily content, fun chess videos, tournament updates, and news about
+            new features — find us on social media.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          {socialLinks.map((social) => {
+            const IconComponent = social.icon;
+            return (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-2xl bg-chess-bg text-chess-text hover:bg-chess-surface-hover transition-colors group"
+              >
+                <IconComponent className="w-5 h-5 text-chess-primary shrink-0 transition-transform group-hover:scale-105" />
+                <span className="text-xs font-black text-chess-text/80 group-hover:text-chess-text transition-colors truncate">
+                  {social.name}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="bg-chess-surface p-6 sm:p-8 rounded-3xl text-center space-y-4">
-        <h2 className="text-xl font-black">Let's Learn Together</h2>
+        <h2 className="text-xl font-black">Let&apos;s Learn Together</h2>
         <p className="text-xs font-bold text-chess-text/60 max-w-lg mx-auto leading-relaxed">
-          Stay connected with us on social media for daily content, fun chess
-          videos, tournament updates, and news about new features.
+          Read the latest articles, or reach out if you want to say hello — we
+          are always happy to hear from fellow chess fans.
         </p>
         <div className="pt-2 flex flex-wrap justify-center gap-3">
           <Link
