@@ -147,22 +147,27 @@ export default function FeedPostDetail({ initialPost }: FeedPostDetailProps) {
   const relativeTime = (dateString: string) => {
     const then = new Date(dateString).getTime();
     if (Number.isNaN(then)) return "";
-    const seconds = Math.max(0, Math.round((Date.now() - then) / 1000));
-    const units: [number, string][] = [
-      [60, "s"],
-      [60, "m"],
-      [24, "h"],
-      [7, "d"],
-      [4.35, "w"],
+
+    const seconds = Math.max(0, Math.floor((Date.now() - then) / 1000));
+
+    // Saniye cinsinden eşikler ve etiketler
+    const thresholds: { limit: number; div: number; label: string }[] = [
+      { limit: 60, div: 1, label: "s" },
+      { limit: 3600, div: 60, label: "m" },
+      { limit: 86400, div: 3600, label: "h" },
+      { limit: 604800, div: 86400, label: "d" },
+      { limit: 2629800, div: 604800, label: "w" }, // ~4.35 hafta
     ];
-    let value = seconds;
-    let label = "s";
-    for (const [step, unit] of units) {
-      if (value < step) break;
-      value = value / step;
-      label = unit;
+
+    for (const { limit, div, label } of thresholds) {
+      if (seconds < limit) {
+        return `${Math.floor(seconds / div)}${label} ago`;
+      }
     }
-    return `${Math.floor(value)}${label} ago`;
+
+    // 1 aydan daha eski tarihler için (hafta sınırını aşınca)
+    const months = Math.floor(seconds / 2629800);
+    return `${months}mo ago`;
   };
 
   const saveEdit = async () => {
