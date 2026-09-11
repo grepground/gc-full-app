@@ -12,6 +12,7 @@ import {
   getFeedReplies,
   getFeedReply,
   canManageFeed,
+  wasEdited,
 } from "../../services/feed";
 import FeedImageCarousel from "./FeedImageCarousel";
 import ReplyThread, { formatReplyDateTime } from "./ReplyThread";
@@ -145,6 +146,17 @@ export default function ReplyDetailClient({
             </Link>
             <span className="text-[11px] font-bold text-chess-text/40">
               {formatReplyDateTime(post.createdAt)}
+              {wasEdited(post) && (
+                <>
+                  {" · "}
+                  <span
+                    className="italic text-chess-text/30"
+                    title={`Edited ${formatReplyDateTime(post.updatedAt)}`}
+                  >
+                    Edited
+                  </span>
+                </>
+              )}
             </span>
           </div>
           <Link

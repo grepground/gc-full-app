@@ -91,6 +91,22 @@ export const canManageFeedReply = (
   author: ReplyNode["author"],
 ): boolean => isAdminOrMod(user) || user?.username === author.username;
 
+// --- Edit metadata ---
+
+/**
+ * True when an item was changed after it was first published.
+ *
+ * The API stores `updatedAt` on every row, including on create (where it equals
+ * `createdAt`), so a plain string comparison is enough. Millisecond precision is
+ * kept on both sides to avoid flagging a post edited at the very same second it
+ * was created.
+ */
+export const wasEdited = (
+  item: Pick<FeedPost | ReplyNode, "createdAt" | "updatedAt">,
+): boolean =>
+  !!item.updatedAt &&
+  new Date(item.updatedAt).getTime() !== new Date(item.createdAt).getTime();
+
 // --- Reply tree helpers ---
 
 // Recursively collect every reply (and nested child) into a flat array.

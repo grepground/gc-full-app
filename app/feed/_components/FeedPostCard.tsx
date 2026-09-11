@@ -12,6 +12,7 @@ import {
   updateFeed,
   canManageFeed,
   repliesMeta,
+  wasEdited,
 } from "../../services/feed";
 import FeedEditor from "./FeedEditor";
 import FeedImageCarousel from "./FeedImageCarousel";
@@ -168,6 +169,17 @@ export default function FeedPostCard({
           </Link>
           <span className="text-chess-text/20">•</span>
           <span className="shrink-0">{formatDateTime(post.createdAt)}</span>
+          {wasEdited(post) && (
+            <>
+              <span className="text-chess-text/20">•</span>
+              <span
+                className="shrink-0 italic text-chess-text/40"
+                title={`Edited ${formatDateTime(post.updatedAt)}`}
+              >
+                Edited
+              </span>
+            </>
+          )}
         </div>
         <div className="ml-auto flex items-center gap-2">
           {canManage && !editing && (

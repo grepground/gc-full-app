@@ -14,6 +14,7 @@ import {
   recordFeedPostView,
   updateFeed,
   canManageFeed,
+  wasEdited,
 } from "../../services/feed";
 import FeedEditor from "./FeedEditor";
 import FeedImageCarousel from "./FeedImageCarousel";
@@ -278,6 +279,17 @@ export default function FeedPostDetail({ initialPost }: FeedPostDetailProps) {
                 {relativeTime(post.createdAt)}
                 <span className="text-chess-text/20"> · </span>
                 <span>{views} views</span>
+                {wasEdited(post) && (
+                  <>
+                    <span className="text-chess-text/20"> · </span>
+                    <span
+                      className="italic"
+                      title={formatDateTime(post.updatedAt)}
+                    >
+                      Edited
+                    </span>
+                  </>
+                )}
               </span>
             </div>
             <div className="ml-auto flex items-center gap-2">
@@ -365,9 +377,19 @@ export default function FeedPostDetail({ initialPost }: FeedPostDetailProps) {
               onSubmit={saveEdit}
             />
           ) : (
-            <p className="text-[17px] md:text-xl font-semibold text-chess-text/90 leading-[1.75] whitespace-pre-wrap wrap-break-word">
-              {post.body}
-            </p>
+            <div className="space-y-2">
+              <p className="text-[17px] md:text-xl font-semibold text-chess-text/90 leading-[1.75] whitespace-pre-wrap wrap-break-word">
+                {post.body}
+              </p>
+              {wasEdited(post) && (
+                <p
+                  className="text-[11px] font-bold italic text-chess-text/35 select-none"
+                  title={`Originally posted ${formatDateTime(post.createdAt)}`}
+                >
+                  Edited · {formatDateTime(post.updatedAt)}
+                </p>
+              )}
+            </div>
           )}
 
           {confirmDelete && (

@@ -9,6 +9,7 @@ import {
   addFeedReply,
   deleteFeedReply,
   canManageFeedReply,
+  wasEdited,
 } from "../../services/feed";
 import { errorMessage } from "../../services/api";
 import UserAvatar from "../../components/common/UserAvatar";
@@ -152,6 +153,17 @@ export default function ReplyThread({
               >
                 {formatReplyDateTime(reply.createdAt)}
               </Link>
+            )}
+            {wasEdited(reply) && (
+              <>
+                <span className="text-chess-text/20">•</span>
+                <span
+                  className="italic text-chess-text/40"
+                  title={`Edited ${formatReplyDateTime(reply.updatedAt)}`}
+                >
+                  Edited
+                </span>
+              </>
             )}
           </div>
 
